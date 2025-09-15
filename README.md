@@ -1,8 +1,8 @@
-# Wikipedia Taught Me 📧📚
+# Today Wikipedia Taught Me 
 
-A personalized Wikipedia email service that delivers curated articles to users based on their preferences. Get your daily dose of knowledge delivered straight to your inbox!
+A Wikipedia email service that delivers curated articles to users based on their preferences. 
 
-## 🌟 Features
+## Features
 
 ### User Portal
 - **Simple Signup**: Users enter their email and get instant access to their personal dashboard
@@ -23,9 +23,8 @@ A personalized Wikipedia email service that delivers curated articles to users b
 - **Daily Delivery**: Automatic emails sent around 10 AM
 - **Smart Scheduling**: Database-driven delivery system
 - **Personalized Content**: Each user receives articles matching their preferences
-- **Reliable Service**: Robust email delivery with error handling
 
-## 🏗️ Project Architecture
+## Project Architecture
 
 ```
 wikipediataughtme/
@@ -41,7 +40,7 @@ wikipediataughtme/
 └── docs/                   # Documentation and API specs
 ```
 
-## 🚀 Tech Stack
+## Tech Stack
 
 ### Frontend
 - **Framework**: React with TypeScript
@@ -61,7 +60,7 @@ wikipediataughtme/
 - **Email Provider**: SendGrid / AWS SES
 - **Wikipedia API**: Wikipedia REST API
 
-## 📋 Development Roadmap
+## Development Roadmap
 
 ### Phase 1: MVP
 - [ ] Basic user signup and email collection
@@ -111,7 +110,7 @@ npm run dev:web
 npm run dev:email-service
 ```
 
-## 📧 Email Delivery System
+## Email Delivery System
 
 The email service runs independently and:
 1. Connects to the database to fetch active subscriptions
@@ -120,7 +119,7 @@ The email service runs independently and:
 4. Sends emails via configured SMTP service
 5. Logs delivery status and handles failures
 
-## 🔧 Configuration
+## Configuration
 
 ### Environment Variables
 ```env
@@ -138,23 +137,3 @@ WIKIPEDIA_API_URL=https://en.wikipedia.org/api/rest_v1
 JWT_SECRET=your_jwt_secret
 ```
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- Wikipedia for providing the amazing API
-- The open-source community for inspiration and tools
-
----
-
-**Made with ❤️ for knowledge seekers everywhere**
