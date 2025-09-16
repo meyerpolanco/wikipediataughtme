@@ -50,15 +50,15 @@ wikipediataughtme/
 
 ### Backend
 - **API**: Node.js with Express
-- **Database**: PostgreSQL with Prisma ORM
+- **Database**: SQLite (development) / Supabase (production) with Prisma ORM
 - **Authentication**: JWT tokens
 - **Validation**: Zod schemas
 
 ### Email Service
 - **Language**: Python (for robust scheduling and API handling)
 - **Scheduler**: APScheduler or Celery
-- **Email Provider**: SendGrid / AWS SES
-- **Wikipedia API**: Wikipedia REST API
+- **Email Provider**: Gmail SMTP (development) / Resend (production)
+- **Wikipedia API**: Wikipedia REST API (free)
 
 ## Development Roadmap
 
@@ -80,13 +80,13 @@ wikipediataughtme/
 - [ ] Mobile app
 - [ ] Premium subscription tiers
 
-## 🛠️ Getting Started
+## Getting Started
 
 ### Prerequisites
 - Node.js 18+
 - Python 3.9+
-- PostgreSQL 14+
 - Git
+- Gmail account (for email service)
 
 ### Installation
 ```bash
@@ -102,7 +102,7 @@ pip install -r requirements.txt
 cp .env.example .env
 # Edit .env with your configuration
 
-# Set up database
+# Set up database (SQLite - no installation needed)
 npm run db:migrate
 
 # Start development servers
@@ -123,14 +123,15 @@ The email service runs independently and:
 
 ### Environment Variables
 ```env
-# Database
-DATABASE_URL=postgresql://user:password@localhost:5432/wikipediataughtme
+# Database (SQLite - file-based, no setup needed)
+DATABASE_URL=file:./dev.db
 
-# Email Service
-SENDGRID_API_KEY=your_sendgrid_key
-FROM_EMAIL=noreply@wikipediataughtme.com
+# Email Service (Gmail SMTP - free)
+GMAIL_USER=your_gmail@gmail.com
+GMAIL_APP_PASSWORD=your_app_password
+FROM_EMAIL=your_gmail@gmail.com
 
-# Wikipedia API
+# Wikipedia API (free)
 WIKIPEDIA_API_URL=https://en.wikipedia.org/api/rest_v1
 
 # Security
