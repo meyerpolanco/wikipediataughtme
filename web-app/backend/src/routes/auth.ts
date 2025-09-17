@@ -1,7 +1,7 @@
 import express from 'express';
 import { z } from 'zod';
 import jwt from 'jsonwebtoken';
-import { users } from '../data/users';
+import { db } from '../database';
 
 const router = express.Router();
 
@@ -16,14 +16,10 @@ router.post('/signin', async (req, res) => {
     const { email } = signInSchema.parse(req.body);
     
     // Check if user exists, if not create them
-    if (!users.has(email)) {
-      users.set(email, {
-        email,
-        subscriptions: ['true-random', 'brand-new'] // Default subscriptions
-      });
+    let user = await db.getUserByEmail(email);
+    if (!user) {
+      user = await db.createUser(email);
     }
-    
-    const user = users.get(email)!;
     
     // Create JWT token
     const token = jwt.sign(
@@ -57,7 +53,7 @@ router.post('/signin', async (req, res) => {
 });
 
 // Verify token endpoint
-router.get('/verify', (req, res) => {
+router.get('/verify', async (req, res) => {
   try {
     const token = req.headers.authorization?.replace('Bearer ', '');
     
@@ -69,7 +65,7 @@ router.get('/verify', (req, res) => {
     }
     
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key') as any;
-    const user = users.get(decoded.email);
+    const user = await db.getUserByEmail(decoded.email);
     
     if (!user) {
       return res.status(401).json({

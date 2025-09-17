@@ -1,7 +1,7 @@
 import express from 'express';
 import { z } from 'zod';
 import jwt from 'jsonwebtoken';
-import { users } from '../data/users';
+import { db } from '../database';
 import '../types'; // Import to extend Express types
 
 const router = express.Router();
@@ -35,9 +35,9 @@ const verifyToken = (req: express.Request, res: express.Response, next: express.
 };
 
 // Get user subscriptions
-router.get('/', verifyToken, (req: express.Request, res) => {
+router.get('/', verifyToken, async (req: express.Request, res) => {
   try {
-    const user = users.get(req.user?.email || '');
+    const user = await db.getUserByEmail(req.user?.email || '');
     
     if (!user) {
       return res.status(404).json({
@@ -60,21 +60,10 @@ router.get('/', verifyToken, (req: express.Request, res) => {
 });
 
 // Update user subscriptions
-router.put('/', verifyToken, (req: express.Request, res) => {
+router.put('/', verifyToken, async (req: express.Request, res) => {
   try {
     const { subscriptions } = updateSubscriptionsSchema.parse(req.body);
-    const user = users.get(req.user?.email || '');
-    
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        error: 'User not found'
-      });
-    }
-    
-    // Update subscriptions
-    user.subscriptions = subscriptions;
-    users.set(req.user?.email || '', user);
+    const user = await db.updateUserSubscriptions(req.user?.email || '', subscriptions);
     
     res.json({
       success: true,
@@ -97,44 +86,17 @@ router.put('/', verifyToken, (req: express.Request, res) => {
 });
 
 // Get available subscription options
-router.get('/options', (req, res) => {
+router.get('/options', async (req, res) => {
   try {
-    const options = [
-      {
-        id: 'true-random',
-        name: 'True Random',
-        description: 'Completely random Wikipedia articles'
-      },
-      {
-        id: 'trending',
-        name: 'Trending',
-        description: 'Currently popular articles'
-      },
-      {
-        id: 'brand-new',
-        name: 'Brand New',
-        description: 'Recently created articles'
-      },
-      {
-        id: 'science',
-        name: 'Science & Technology',
-        description: 'Articles about science, tech, and innovation'
-      },
-      {
-        id: 'history',
-        name: 'History',
-        description: 'Historical events, figures, and periods'
-      },
-      {
-        id: 'culture',
-        name: 'Culture & Arts',
-        description: 'Music, literature, art, and cultural topics'
-      }
-    ];
+    const options = await db.getSubscriptionOptions();
     
     res.json({
       success: true,
-      options
+      options: options.map(option => ({
+        id: option.name,
+        name: option.name.charAt(0).toUpperCase() + option.name.slice(1).replace('-', ' '),
+        description: option.description
+      }))
     });
   } catch (error) {
     console.error('Get options error:', error);
