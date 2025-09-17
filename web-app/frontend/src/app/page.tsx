@@ -2,24 +2,29 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { apiClient } from '@/lib/api';
 
 export default function Home() {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
   const router = useRouter();
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError('');
     
-    // TODO: Connect to backend API to check if email exists
-    // For now, simulate API call
-    setTimeout(() => {
-      console.log('Signing in with email:', email);
-      // Navigate to dashboard (we'll create this next)
+    try {
+      const response = await apiClient.signIn(email);
+      console.log('Sign in successful:', response);
       router.push('/dashboard');
+    } catch (err) {
+      console.error('Sign in failed:', err);
+      setError(err instanceof Error ? err.message : 'Sign in failed');
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   return (
@@ -54,6 +59,13 @@ export default function Home() {
                   placeholder="Enter your email address"
                 />
               </div>
+
+              {/* Error Message */}
+              {error && (
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-lg text-sm">
+                  {error}
+                </div>
+              )}
 
               {/* Sign In Button */}
               <button
